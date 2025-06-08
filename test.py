@@ -1,37 +1,34 @@
-import requests
-from bs4 import BeautifulSoup
+import re
 
-url = "https://jeondong.sen.ms.kr/19970/subMenu.do"
+def format_schedule(text):
+    # 1) '기말고사' + 공백 + 숫자 + 줄바꿈 + 숫자가 있으면 모두 한 줄로 붙이기
+    # 예: '기말고사\n3' 또는 '기말고사 3\n' 등 다 처리
+    text = re.sub(r'(기말고사)\s*\n*\s*(\d+)', r'\1 \2', text)
+    
+    # 2) '기말고사 숫자일' 인 경우 숫자 뒤 '일' 제거
+    text = re.sub(r'(기말고사\s*\d+)일', r'\1', text)
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                  "AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/115.0 Safari/537.36"
-}
+    # 3) 숫자+일 바로 뒤에 한글 붙으면 줄바꿈 (날짜 구분용)
+    text = re.sub(r'(\d{1,2}일)(?=[가-힣])', r'\1\n', text)
 
-try:
-    response = requests.get(url, headers=headers, verify=False)
-    response.raise_for_status()
+    # 4) 날짜(숫자+일) 기준으로 분리해서 한 줄씩 정리
+    parts = re.split(r'(\d{1,2}일)', text)
+    result_lines = []
+    for i in range(1, len(parts), 2):
+        day = parts[i]
+        desc = parts[i+1].strip() if i+1 < len(parts) else ''
+        result_lines.append(f"{day}{desc}")
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    return '\n'.join(result_lines)
 
-    a_tags = soup.find_all('a', attrs={"title": "클릭하면 내용을 보실 수 있습니다."})
 
-    seen_tds = set()  # 중복 방지를 위한 집합
+sample_text = """6일현충일
+9일성매매예방교육.성폭력예방교육.도박예방교육
+25일(1)교과 3(2,3) 기말고사
+3
+26일(1)교과 3(2,3) 기말고사
+3
+27일(1)교과 3(2,3) 기말고사
+3"""
 
-    if not a_tags:
-        print("해당 속성을 가진 a 태그를 찾지 못했습니다.")
-    else:
-        for a_tag in a_tags:
-            td_parent = a_tag.find_parent('td')
-            if td_parent:
-                # td 태그의 고유 문자열 표현(예: 내용)을 기준으로 중복 검사
-                td_text = td_parent.get_text(strip=True)
-                if td_text not in seen_tds:
-                    print("----- td 태그 내용 -----")
-                    print(td_text)
-                    print('-' * 40)
-                    seen_tds.add(td_text)
-
-except requests.exceptions.RequestException as e:
-    print("요청 중 오류 발생:", e)
+print(format_schedule(sample_text))

@@ -53,4 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
       sendMessage();
     }
   });
+    // 빠른 버튼으로 메시지 전송
+  window.sendQuickMessage = function (text) {
+    messageInput.value = text;
+    sendBtn.click();
+  };
 });
