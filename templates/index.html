@@ -1,35 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>학교 챗봇</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전동중학교 챗봇</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
   <button id="chat-toggle">🤖</button>
 
   <div id="chat-container" class="hidden">
     <h2>챗봇</h2>
-    <div id="chat-box" style="flex:1; overflow-y:auto; border:1px solid #ddd; padding:5px; margin-bottom:10px;">
-      <!-- 채팅 내용 표시 영역 -->
-      <div class="bot-message">
-        안녕하세요! 전동중학교 챗봇입니다.<br>
-        ↓ 궁금한 정보를 선택하거나 질문을 입력해주세요!
-        <div class="quick-buttons" style="margin-top:10px;">
-          <button onclick="sendQuickMessage('급식')">급식</button>
-          <button onclick="sendQuickMessage('학사일정')">학사일정</button>
-          <button onclick="sendQuickMessage('공지사항')">공지사항</button>
-          <button onclick="sendQuickMessage('가정통신문')">가정통신문</button>
-          <button onclick="sendQuickMessage('전동중학교')">전동중학교</button>
-        </div>
-      </div>
-    </div>
+    <div id="chat-box"></div>
 
-    <!-- 입력 영역 -->
-    <div style="display:flex;">
-      <input type="text" id="message" placeholder="질문을 입력하세요..." style="flex:1; padding:5px;" />
-      <button id="send-btn" style="padding:5px 10px; margin-left:5px;">보내기</button>
+    <div id="input-area">
+      <input type="text" id="message" placeholder="질문을 입력하세요..." />
+      <button id="send-btn">보내기</button>
     </div>
   </div>
 

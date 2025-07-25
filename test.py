@@ -1,34 +1,33 @@
-import re
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
-def format_schedule(text):
-    # 1) '기말고사' + 공백 + 숫자 + 줄바꿈 + 숫자가 있으면 모두 한 줄로 붙이기
-    # 예: '기말고사\n3' 또는 '기말고사 3\n' 등 다 처리
-    text = re.sub(r'(기말고사)\s*\n*\s*(\d+)', r'\1 \2', text)
-    
-    # 2) '기말고사 숫자일' 인 경우 숫자 뒤 '일' 제거
-    text = re.sub(r'(기말고사\s*\d+)일', r'\1', text)
+# Chrome 드라이버 실행
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver.get("https://jeondong.sen.ms.kr/19967/subMenu.do")
 
-    # 3) 숫자+일 바로 뒤에 한글 붙으면 줄바꿈 (날짜 구분용)
-    text = re.sub(r'(\d{1,2}일)(?=[가-힣])', r'\1\n', text)
+# 공지 span 로딩 대기
+WebDriverWait(driver, 10).until(
+    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.flag_notice"))
+)
 
-    # 4) 날짜(숫자+일) 기준으로 분리해서 한 줄씩 정리
-    parts = re.split(r'(\d{1,2}일)', text)
-    result_lines = []
-    for i in range(1, len(parts), 2):
-        day = parts[i]
-        desc = parts[i+1].strip() if i+1 < len(parts) else ''
-        result_lines.append(f"{day}{desc}")
+results = []
 
-    return '\n'.join(result_lines)
+# 공지 span을 기준으로 tr 추적
+notices = driver.find_elements(By.CSS_SELECTOR, "span.flag_notice")
+for notice in notices:
+    # 해당 span이 속한 tr 찾기
+    tr = notice.find_element(By.XPATH, "./ancestor::tr")
+    subject_td = tr.find_element(By.CSS_SELECTOR, "td.subject")
+    title = subject_td.text.strip()
+    results.append(title)
 
+driver.quit()
 
-sample_text = """6일현충일
-9일성매매예방교육.성폭력예방교육.도박예방교육
-25일(1)교과 3(2,3) 기말고사
-3
-26일(1)교과 3(2,3) 기말고사
-3
-27일(1)교과 3(2,3) 기말고사
-3"""
-
-print(format_schedule(sample_text))
+# 출력
+print("📌 공지사항 제목 (공지글만):")
+for i, title in enumerate(results, 1):
+    print(f"{i}. {title}")

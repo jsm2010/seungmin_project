@@ -17,6 +17,11 @@
   z-index: 1000;
 }
 
+#chat-toggle:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease-in-out;
+}
+
 #chat-container {
   position: fixed;
   bottom: 90px;
@@ -33,13 +38,15 @@
   z-index: 999;
 }
 
-h2 {
-  margin: 0; /* 모든 여백을 0으로 설정 */
+#chat-box {
+  height: 400px;  /* 원하는 높이로 조정 가능 */
+  overflow-y: auto;
+  padding: 10px;
+  border-top: 1px solid #ccc;
 }
 
-#chat-toggle:hover {
-  transform: scale(1.2);
-  transition: transform 0.2s ease-in-out;
+h2 {
+  margin: 0;
 }
 
 .message {
@@ -66,3 +73,33 @@ h2 {
   border-bottom-left-radius: 0;
   text-align: left;
 }
+
+.bot-buttons-wrapper {
+  clear: both;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 🔽 이미지 버튼 전용 스타일 */
+.bot-option {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.bot-option img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.bot-option:hover img {
+  transform: scale(1.2);
+}
+
