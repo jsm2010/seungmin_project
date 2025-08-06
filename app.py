@@ -137,6 +137,7 @@ def get_bot_response(message):
         if not schedule:
             return "학사일정 정보를 불러올 수 없어요."
         response = ""
+        response += f"<br>"
         for title, content in schedule[:5]:
             response += f"[{title}] {content}<br>"
         return response.strip()
@@ -148,8 +149,10 @@ def get_bot_response(message):
         if len(notices) == 1 and notices[0].startswith("공지사항 크롤링 오류"):
             return notices[0]
 
+        response = "📌 공지사항 제목 (공지글만):<br>"
         response = ""
         for title in notices[:5]:
+            response += f"• {title}<br>"
             response += f"<br>[공지] {title}"
         response += '<br><br>더 많은 정보는 <a href="https://jeondong.sen.ms.kr/19967/subMenu.do" target="_blank">이곳에서 확인</a>하실 수 있어요.'
         return response.strip()
