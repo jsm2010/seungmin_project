@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, session
 import requests
+import os
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
@@ -64,7 +65,8 @@ def get_meal_by_date(date_str):
 # 학사일정 파싱 함수 (로컬 HTML 파일)
 def parse_school_schedule():
     try:
-        with open("school_schedule.html", "r", encoding="utf-8") as f:
+        file_path = os.path.join(os.path.dirname(__file__), "school_schedule.html")
+        with open(file_path, "r", encoding="utf-8") as f:
             soup = BeautifulSoup(f, "html.parser")
 
         result = []
