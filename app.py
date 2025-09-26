@@ -12,12 +12,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"  # 세션용 비밀키
+app.secret_key = "bimil"
 
 # 날짜 파싱 함수 (자연어 포함)
 def parse_date_input(text):
     today = datetime.today()
     text = text.strip().replace(" ", "")
+
+    # 기본적인 매핑
     date_map = {
         "오늘": today,
         "내일": today + timedelta(days=1),
@@ -29,11 +31,33 @@ def parse_date_input(text):
     if text in date_map:
         return date_map[text].strftime("%Y%m%d")
 
+    # 요일 매핑 (0=월요일, 6=일요일)
+    weekdays = {
+        "월요일": 0, "화요일": 1, "수요일": 2,
+        "목요일": 3, "금요일": 4, "토요일": 5, "일요일": 6
+    }
+
+    # 이번주 / 다음주 / 요일만 처리
+    for key, target_weekday in weekdays.items():
+        if ("이번주" in text or text == key) and key in text:
+            current_weekday = today.weekday()
+            diff = target_weekday - current_weekday
+            target_date = today + timedelta(days=diff)
+            return target_date.strftime("%Y%m%d")
+
+        elif "다음주" in text and key in text:
+            current_weekday = today.weekday()
+            diff = (7 - current_weekday) + target_weekday
+            target_date = today + timedelta(days=diff)
+            return target_date.strftime("%Y%m%d")
+
+    # YYYYMMDD 형식 직접 입력
     try:
         parsed_date = datetime.strptime(text, "%Y%m%d")
         return parsed_date.strftime("%Y%m%d")
     except ValueError:
         return None
+
 
 # 급식 정보 요청
 def get_meal_by_date(date_str):
@@ -68,7 +92,7 @@ def parse_school_schedule():
             soup = BeautifulSoup(f, "html.parser")
 
         result = []
-        for a_tag in soup.find_all('a', title="클릭하면 내용을 보실 수 있습니다."):
+        for a_tag in soup.find_all('a', title="클릭하면 내용을 보실 수 있습니다."): # 클릭하면 내용을 보실 수 있습니다.라는 title을 가진 a태그 찾기
             td_tag = a_tag.find_parent('td')
             td_text = td_tag.get_text(strip=True) if td_tag else ''
             date_part = ''
@@ -117,7 +141,7 @@ def fetch_notices_with_selenium():
     return results
 
 # 챗봇 응답 처리
-def get_bot_response(message):
+def get_bot_response(message): 
     if session.get("awaiting_meal_date"):
         session["awaiting_meal_date"] = False
         parsed_date = parse_date_input(message)

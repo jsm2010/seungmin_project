@@ -39,7 +39,7 @@
 }
 
 #chat-box {
-  height: 400px;  /* 원하는 높이로 조정 가능 */
+  height: 400px;
   overflow-y: auto;
   padding: 10px;
   border-top: 1px solid #ccc;
@@ -83,7 +83,6 @@ h2 {
   gap: 6px;
 }
 
-/* 🔽 이미지 버튼 전용 스타일 */
 .bot-option {
   background: none;
   border: none;
@@ -92,7 +91,7 @@ h2 {
   transition: transform 0.2s ease;
 }
 
-.bot-option img {
+.bot-option img { 
   width: 48px;
   height: 48px;
   object-fit: contain;

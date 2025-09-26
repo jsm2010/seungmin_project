@@ -4,21 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>전동중학교 챗봇</title>
+  <!-- 외부 css 불러오기 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <!-- 챗봇 열고 닫는 버튼 -->
   <button id="chat-toggle">🤖</button>
 
+  <!-- 챗봇 컨테이너 -->
   <div id="chat-container" class="hidden">
     <h2>챗봇</h2>
     <div id="chat-box"></div>
 
-    <div id="input-area">
+    <!-- 메시지 입력 영역 -->
+    <div id="input-area"> 
       <input type="text" id="message" placeholder="질문을 입력하세요..." />
       <button id="send-btn">보내기</button>
     </div>
+
   </div>
 
+  <!-- 외부 js 불러오기 -->
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

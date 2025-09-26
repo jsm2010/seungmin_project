@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (error) {
       console.error('Error:', error);
-      addBotMessage("⚠️ 오류가 발생했습니다.", true);
+      addBotMessage(" 오류가 발생했습니다.⚠️", true);
     }
   }
 
@@ -53,12 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function addUserMessage(text) {
     const userMsg = document.createElement('div');
     userMsg.className = 'message user-message';
-    userMsg.innerText = `🙋 ${text}`;
+    userMsg.innerText = `${text}`;
     chatBox.appendChild(userMsg);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // 챗봇 메시지 출력 + 버튼 (옵션)
+  // 챗봇 메시지 출력 + 버튼
   function addBotMessage(text, withButtons = false) {
     // 이전 버튼 제거
     const oldButtons = document.querySelector('.bot-buttons-wrapper');
