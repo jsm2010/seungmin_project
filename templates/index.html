@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+<<<<<<< HEAD
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,3 +29,55 @@
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+=======
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>전동중학교 챗봇</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+      /* iframe을 전체 화면으로 */
+      #school-frame {
+        width: 100%;
+        height: 100vh;
+        border: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+
+      /* 챗봇 요소들이 iframe 위에 표시되도록 z-index 조정 */
+      #chat-toggle {
+        position: fixed;
+        z-index: 1000;
+      }
+
+      #chat-container {
+        position: fixed;
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 학교 홈페이지를 iframe으로 임베드 -->
+    <iframe id="school-frame" src="https://jeondong.sen.ms.kr/"></iframe>
+
+    <!-- 기존 챗봇 코드 -->
+    <button id="chat-toggle">🤖</button>
+
+    <!-- 기존 챗봇 컨테이너 -->
+    <div id="chat-container" class="hidden">
+      <h2>챗봇</h2>
+      <div id="chat-box"></div>
+
+      <div id="input-area">
+        <input type="text" id="message" placeholder="질문을 입력하세요..." />
+        <button id="send-btn">보내기</button>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
+>>>>>>> 41b94313e891f95460c1852d82c9821e47425f58

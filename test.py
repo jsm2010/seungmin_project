@@ -1,33 +1,40 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import time
 
-# Chrome 드라이버 실행
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-driver.get("https://jeondong.sen.ms.kr/19967/subMenu.do")
+def get_school_schedule():
+    try:
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
 
-# 공지 span 로딩 대기
-WebDriverWait(driver, 10).until(
-    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.flag_notice"))
-)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver.get("https://jeondong.sen.ms.kr/19970/subMenu.do")
+        time.sleep(2)
 
-results = []
+        schedule_table = driver.find_element(By.CLASS_NAME, "tbl_calendar")
+        tds = schedule_table.find_elements(By.TAG_NAME, "td")
 
-# 공지 span을 기준으로 tr 추적
-notices = driver.find_elements(By.CSS_SELECTOR, "span.flag_notice")
-for notice in notices:
-    # 해당 span이 속한 tr 찾기
-    tr = notice.find_element(By.XPATH, "./ancestor::tr")
-    subject_td = tr.find_element(By.CSS_SELECTOR, "td.subject")
-    title = subject_td.text.strip()
-    results.append(title)
+        schedule = []
 
-driver.quit()
+        for td in tds:
+            day = td.find_element(By.CLASS_NAME, "day").text.strip() if len(td.find_elements(By.CLASS_NAME, "day")) > 0 else None
+            info = td.text.replace(day, "").strip() if day else td.text.strip()
+            if day and info:
+                schedule.append(f"[{day}일] {info}")
 
-# 출력
-print("📌 공지사항 제목 (공지글만):")
-for i, title in enumerate(results, 1):
-    print(f"{i}. {title}")
+        driver.quit()
+
+        if not schedule:
+            return "🤖 학사일정 정보를 찾을 수 없어요."
+        return "✅ 학사일정 크롤링 성공!\n" + "\n".join(schedule)
+
+    except Exception as e:
+        return f"❌ 오류 발생: {e}"
+
+# 실행
+print(get_school_schedule())
