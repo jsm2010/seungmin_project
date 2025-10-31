@@ -1,83 +1,55 @@
 <!DOCTYPE html>
 <html lang="ko">
-<<<<<<< HEAD
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>전동중학교 챗봇</title>
-  <!-- 외부 css 불러오기 -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <!-- 챗봇 열고 닫는 버튼 -->
-  <button id="chat-toggle">🤖</button>
-
-  <!-- 챗봇 컨테이너 -->
-  <div id="chat-container" class="hidden">
-    <h2>챗봇</h2>
-    <div id="chat-box"></div>
-
-    <!-- 메시지 입력 영역 -->
-    <div id="input-area"> 
-      <input type="text" id="message" placeholder="질문을 입력하세요..." />
-      <button id="send-btn">보내기</button>
-    </div>
-
-  </div>
-
-  <!-- 외부 js 불러오기 -->
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
-=======
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>전동중학교 챗봇</title>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <style>
-      /* iframe을 전체 화면으로 */
+      /* 학교 홈페이지를 전체 화면으로 임베드 */
       #school-frame {
+        position: fixed;
+        inset: 0;
         width: 100%;
         height: 100vh;
         border: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1;
+        z-index: 0; /* 가장 뒤 */
+        /* 만약 아이콘 클릭이 또 막히면 아래 줄을 잠시 켜세요 */
+        /* pointer-events: none;  클릭 가로챔 방지(iframe 조작은 못함) */
       }
 
-      /* 챗봇 요소들이 iframe 위에 표시되도록 z-index 조정 */
+      /* 챗봇 토글 버튼/창은 항상 위 */
       #chat-toggle {
         position: fixed;
+        right: 20px;
+        bottom: 20px;
         z-index: 1000;
       }
-
       #chat-container {
         position: fixed;
+        right: 20px;
+        bottom: 80px;
         z-index: 1000;
       }
     </style>
   </head>
   <body>
-    <!-- 학교 홈페이지를 iframe으로 임베드 -->
+    <!-- 학교 홈페이지 iframe -->
     <iframe id="school-frame" src="https://jeondong.sen.ms.kr/"></iframe>
 
-    <!-- 기존 챗봇 코드 -->
+    <!-- 챗봇 UI -->
     <button id="chat-toggle">🤖</button>
-
-    <!-- 기존 챗봇 컨테이너 -->
     <div id="chat-container" class="hidden">
       <h2>챗봇</h2>
       <div id="chat-box"></div>
-
       <div id="input-area">
         <input type="text" id="message" placeholder="질문을 입력하세요..." />
         <button id="send-btn">보내기</button>
       </div>
     </div>
 
+    <!-- JS는 body 맨 아래에서 로드 -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>
->>>>>>> 41b94313e891f95460c1852d82c9821e47425f58
